@@ -1,4 +1,5 @@
-const Tasks = require('../models/taskModel')
+const Tasks = require('../models/taskModel');
+const AppError = require('../utils/appError');
 
 
 exports.allTasks = async (req, res) => {
@@ -20,5 +21,18 @@ exports.createTasks = async(req, res) => {
     res.status(200).json({
         message: "SUCCESS",
         Task: newTask
+    })
+}
+
+exports.deleteTask = async(req, res, next) => {
+    const task = await Tasks.findByIdAndDelete(req.params.id);
+
+    if(!task) {
+        return next(new AppError('No Task is found with that ID', 404));
+    }
+
+    res.status(200).json({
+        status: "SUCCESS",
+        task: task
     })
 }
