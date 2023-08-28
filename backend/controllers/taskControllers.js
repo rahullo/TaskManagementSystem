@@ -36,3 +36,19 @@ exports.deleteTask = async(req, res, next) => {
         task: task
     })
 }
+
+exports.updateTask = async(req, res, next) => {
+    const task = await Tasks.findByIdAndUpdate(req.params.id, req.body,{
+        new: true,
+        runValidators: true
+    })
+
+    if(!task) {
+        return next(new AppError('No Task is found with that ID', 404))
+    }
+
+    res.status(200).json({
+        status: 'SUCCESS',
+        task: task
+    })
+}
