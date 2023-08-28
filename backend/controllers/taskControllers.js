@@ -13,6 +13,19 @@ exports.allTasks = async (req, res) => {
     })
 }
 
+exports.getTaskByID = async(req, res, next) => {
+    const task = await Tasks.findById(req.params.id);
+
+    if(!task) {
+        return next(new AppError('No Task is found with that ID', 404));
+    }
+
+    res.status(200).json({
+        message: "SUCCESS",
+        task: task
+    })
+}
+
 
 exports.createTasks = async(req, res) => {
 
