@@ -5,7 +5,26 @@ const catchAsync = require('../utils/catchAsync')
 
 exports.allTasks = catchAsync(async (req, res) => {
 
-    const tasks = await Tasks.find();
+    // const tasks = await Tasks.find();
+
+
+// Aggregate tasks and group them by category
+    const tasks = await Tasks.aggregate([
+        {
+            $group: {
+            _id: '$Category', // Group tasks by category field
+            tasks: { $push: '$$ROOT' } // Store tasks in an array
+            }
+        }
+        ])
+        .then(result => {
+            // 'result' is an array of objects, each representing a category and its tasks
+            return result
+        })
+        .catch(error => {
+            console.error('Error aggregating tasks:', error);
+        });
+
 
     res.status(200).json({
         message: "SUCCESS",
