@@ -1,8 +1,9 @@
 const Tasks = require('../models/taskModel');
 const AppError = require('../utils/appError');
+const catchAsync = require('../utils/catchAsync')
 
 
-exports.allTasks = async (req, res) => {
+exports.allTasks = catchAsync(async (req, res) => {
 
     const tasks = await Tasks.find();
 
@@ -11,9 +12,9 @@ exports.allTasks = async (req, res) => {
         length: tasks.length,
         tasks: tasks
     })
-}
+})
 
-exports.getTaskByID = async(req, res, next) => {
+exports.getTaskByID = catchAsync(async(req, res, next) => {
     const task = await Tasks.findById(req.params.id);
 
     if(!task) {
@@ -24,10 +25,10 @@ exports.getTaskByID = async(req, res, next) => {
         message: "SUCCESS",
         task: task
     })
-}
+})
 
 
-exports.createTasks = async(req, res) => {
+exports.createTasks = catchAsync(async(req, res) => {
 
     const newTask = await Tasks.create(req.body);
 
@@ -35,9 +36,9 @@ exports.createTasks = async(req, res) => {
         message: "SUCCESS",
         Task: newTask
     })
-}
+})
 
-exports.deleteTask = async(req, res, next) => {
+exports.deleteTask = catchAsync(async(req, res, next) => {
     const task = await Tasks.findByIdAndDelete(req.params.id);
 
     if(!task) {
@@ -48,9 +49,9 @@ exports.deleteTask = async(req, res, next) => {
         status: "SUCCESS",
         task: task
     })
-}
+})
 
-exports.updateTask = async(req, res, next) => {
+exports.updateTask = catchAsync(async(req, res, next) => {
     const task = await Tasks.findByIdAndUpdate(req.params.id, req.body,{
         new: true,
         runValidators: true
@@ -64,4 +65,4 @@ exports.updateTask = async(req, res, next) => {
         status: 'SUCCESS',
         task: task
     })
-}
+})
